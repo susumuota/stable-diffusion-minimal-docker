@@ -17,7 +17,7 @@ WORKDIR /stable-diffusion-webui
 # this is optional, but avoids downloading 1.5GiB files on every "docker run"
 RUN git clone https://huggingface.co/openai/clip-vit-large-patch14 openai/clip-vit-large-patch14 && \
   mv openai/clip-vit-large-patch14/pytorch_model.bin openai/clip-vit-large-patch14/pytorch_model.bin.bak && \
-  aria2c -x5 -d openai/clip-vit-large-patch14 https://huggingface.co/openai/clip-vit-large-patch14/resolve/main/pytorch_model.bin
+  aria2c -d openai/clip-vit-large-patch14 https://huggingface.co/openai/clip-vit-large-patch14/resolve/main/pytorch_model.bin
 
 RUN python -u launch.py --skip-torch-cuda-test --exit
 
