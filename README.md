@@ -22,7 +22,7 @@ sudo apt install -y docker-compose-plugin
 
 ## Download model files
 
-Here, we are going to download Stable Diffusion v2-1 model (`v2-1_768-ema-pruned.ckpt`).
+Here, we are going to download Stable Diffusion v2-1 models (`v2-1_768-ema-pruned.ckpt` and ` v2-1_512-ema-pruned.ckpt`).
 
 - https://huggingface.co/stabilityai/stable-diffusion-2-1
 - https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features#stable-diffusion-20
