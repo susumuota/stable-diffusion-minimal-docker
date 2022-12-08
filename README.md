@@ -1,6 +1,6 @@
 # Stable Diffusion Minimal Docker
 
-Minimal docker files to download [Stable Diffusion v2-1 model](https://huggingface.co/stabilityai/stable-diffusion-2-1) and to run [AUTOMATIC1111's stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui) on Google Compute Engine (GCE).
+Minimal docker files to download [Stable Diffusion v2-1 model](https://huggingface.co/stabilityai/stable-diffusion-2-1) and to run [AUTOMATIC1111's stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui) on [Google Compute Engine](https://cloud.google.com/compute).
 
 I have tested it on,
 
