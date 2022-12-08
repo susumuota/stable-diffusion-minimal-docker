@@ -109,6 +109,8 @@ Follow this instruction.
 
 - https://cloud.google.com/compute/docs/instances/create-start-instance
 
+![gce_create_instance](https://user-images.githubusercontent.com/1632335/206372246-37fe9289-bac5-4297-ba61-ab9f34b2d257.png)
+
 - Open https://console.cloud.google.com/compute/instances
 - Press `CREATE INSTANCE`
   - Region - `us-central1 (Iowa)`
@@ -119,7 +121,7 @@ Follow this instruction.
     - Machine type - `n1-highmem-4 (4 vCPU, 26GB memory)`  # or `n1-standard-4`
   - Boot disk - `CHANGE`
     - Operating system - `Deep Learning on Linux`
-    - Version - `Debian 10 based Deep Learning VM with M100`  # no need to choose PyTorch installed
+    - Version - `Debian 10 based Deep Learning VM with M100`  # description is `Base CUDA 11.0, Deep Learning VM image with CUDA 11.0 preinstalled.`
     - Size (GB) - `100`  # `50` might be too small
     - Press `SELECT`
   - Identity and API access  # if you use GCS buckets to save outputs
