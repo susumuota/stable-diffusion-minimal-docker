@@ -28,16 +28,24 @@ Here, we are going to download Stable Diffusion v2-1 model (`v2-1_768-ema-pruned
 - https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features#stable-diffusion-20
 
 ```sh
-cd download-sd-v2-1
+git clone https://github.com/susumuota/stable-diffusion-minimal-docker
+cd stable-diffusion-minimal-docker/download-sd-v2-1
 docker compose build
 docker compose up
-# confirm SHA256. see https://huggingface.co/stabilityai/stable-diffusion-2-1/blob/main/v2-1_768-ema-pruned.ckpt
+# confirm SHA256 on the log
+ls -l models/Stable-diffusion
+# total 5092652
+# -rw-r--r-- 1 root root 5214865159 Dec  8 06:38 v2-1_768-ema-pruned.ckpt
+# -rw-r--r-- 1 root root       1815 Dec  8 06:38 v2-1_768-ema-pruned.yaml
+docker compose down
 cd ..
 ```
 
-## Build image
+To confirm SHA256, see this page.
 
-- https://docs.docker.com/compose/install/linux/#install-using-the-repository
+- https://huggingface.co/stabilityai/stable-diffusion-2-1/blob/main/v2-1_768-ema-pruned.ckpt
+
+## Build image
 
 ```sh
 cd webui  # or webui-cpu
@@ -49,8 +57,10 @@ docker compose build
 Move model files from download directory.
 
 ```sh
-mv ../download-sd-v2-1/models/Stable-diffusion models
+sudo mv ../download-sd-v2-1/models/Stable-diffusion models
 ```
+
+TODO: fix sudo above.
 
 Start webui.
 
@@ -77,10 +87,9 @@ GCS might be convenient to transfer output data to local computer.
 
 ```sh
 tar cfz outputs.tgz outputs
-gsutil mb -l us-central1 gs://sd-outputs-2  # create a bucket
-# gcloud storage buckets describe gs://sd-outputs-2  # confirm settings
-gsutil cp outputs.tgz gs://sd-outputs-2/
-# gsutil rb gs://sd-outputs-2/  # remove the bucket
+gsutil mb -l us-central1 gs://sd-outputs-2           # create a bucket
+gsutil cp outputs.tgz gs://sd-outputs-2/             # copy to the bucket
+# gsutil rb gs://sd-outputs-2/                       # remove the bucket
 ```
 
 Or you can use `scp`. Open terminal on local machine,
@@ -161,7 +170,7 @@ Open a terminal on the local machine and paste the clipboard and add `-- -L 7860
 gcloud compute ssh --zone "us-central1-f" "instance-1"  --project "(project id)" -- -L 7860:localhost:7860
 ```
 
-You will be asked to install Nvidia driver. Press `y`.
+You will be asked to install Nvidia driver. Input `y`.
 
 ```sh
 Would you like to install the Nvidia driver? [y/n]
@@ -201,7 +210,10 @@ If you want to confirm that you will not be charged anymore, delete the project.
 
 - https://cloud.google.com/resource-manager/docs/creating-managing-projects#shutting_down_projects
 
+## Links
 
+- https://github.com/AUTOMATIC1111/stable-diffusion-webui
+- https://github.com/AbdBarho/stable-diffusion-webui-docker
 
 ## License
 
