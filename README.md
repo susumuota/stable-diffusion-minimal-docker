@@ -1,8 +1,8 @@
 # Stable Diffusion Minimal Docker
 
-This docker runs [AUTOMATIC1111's stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui).
+Minimal docker files to download models and to run [AUTOMATIC1111's stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui).
 
-I have tested it on
+I have tested it on,
 
 - Google Compute Engine (GCE) with Deep Learning VM image with NVIDIA T4
 - macOS 12.6.1 without GPUs
