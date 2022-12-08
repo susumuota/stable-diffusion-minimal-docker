@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  sd-webui:
+    build: .
+    working_dir: /stable-diffusion-webui
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./models:/stable-diffusion-webui/models
+      - ./outputs:/stable-diffusion-webui/outputs
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
