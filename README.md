@@ -93,17 +93,21 @@ gcloud compute scp --zone "us-central1-f" --project "(project id)" instance-1:~/
 
 ## Setup on GCE
 
-### Create a project
+### Install gcloud CLI
 
-Follow this instruction.
+- https://cloud.google.com/sdk/docs/install
+
+### Create a project
 
 - https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project
 
 ### Enable billing
 
-Follow this instruction.
-
 - https://cloud.google.com/billing/docs/how-to/modify-project#how-to-enable-billing
+
+### Increase GPU quotas
+
+- https://cloud.google.com/compute/quotas#requesting_additional_quota
 
 ### Create a instance
 
@@ -142,6 +146,10 @@ Monthly estimate should be like this.
 > That's about $0.17 hourly
 
 Instances table will show.
+
+### SSH to VM
+
+![ssh_options](https://user-images.githubusercontent.com/1632335/206373060-e56f2f8f-0309-4b45-81ee-46ce8af42907.png)
 
 - Press triangle on the right of `SSH`
   - `View gcloud command`
