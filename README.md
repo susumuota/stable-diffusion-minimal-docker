@@ -31,19 +31,18 @@ Here, we are going to download Stable Diffusion v2-1 model (`v2-1_768-ema-pruned
 git clone https://github.com/susumuota/stable-diffusion-minimal-docker
 cd stable-diffusion-minimal-docker/download-sd-v2-1
 docker compose build
-docker compose up
-# confirm SHA256 on the log
+docker compose up --no-log-prefix
+docker compose down
+sudo chown -R $(id -u):$(id -g) models  # TODO: find a better way
 ls -l models/Stable-diffusion
 # total 5092652
-# -rw-r--r-- 1 root root 5214865159 Dec  8 06:38 v2-1_768-ema-pruned.ckpt
-# -rw-r--r-- 1 root root       1815 Dec  8 06:38 v2-1_768-ema-pruned.yaml
-docker compose down
+# -rw-r--r-- 1 user user 5214865159 Dec  8 09:23 v2-1_768-ema-pruned.ckpt
+# -rw-r--r-- 1 user user       1815 Dec  8 09:23 v2-1_768-ema-pruned.yaml
+sha256sum models/Stable-diffusion/v2-1_768-ema-pruned.ckpt
+# compare SHA256 with https://huggingface.co/stabilityai/stable-diffusion-2-1/blob/main/v2-1_768-ema-pruned.ckpt
+# it should be "ad2a33c361c1f593c4a1fb32ea81afce2b5bb7d1983c6b94793a26a3b54b08a0"
 cd ..
 ```
-
-To confirm SHA256, see this page.
-
-- https://huggingface.co/stabilityai/stable-diffusion-2-1/blob/main/v2-1_768-ema-pruned.ckpt
 
 ## Build image
 
@@ -54,13 +53,11 @@ docker compose build
 
 ## Start webui
 
-Move model files from download directory.
+Copy model files from download directory or whatever you want.
 
 ```sh
-sudo mv ../download-sd-v2-1/models/Stable-diffusion models
+mv ../download-sd-v2-1/models/Stable-diffusion/* models/Stable-diffusion
 ```
-
-TODO: fix sudo above.
 
 Start webui.
 
