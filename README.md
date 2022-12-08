@@ -7,39 +7,52 @@ I have tested it on
 - Google Compute Engine (GCE) with Deep Learning VM image with NVIDIA T4
 - macOS 12.6.1 without GPUs
 
-## Download model files
+If you want to setup on GCE, see `Setup on GCE` section first.
 
-- https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features#stable-diffusion-20
+## Install Docker and Docker Compose
+
+- https://docs.docker.com/engine/install/
+
+If you are using GCE with Deep Learning VM image, you only need to install `docker-compose-plugin`.
 
 ```sh
 sudo apt update
-sudo apt install -y aria2
-git clone https://github.com/susumuota/stable-diffusion-minimal-docker.git
-cd stable-diffusion-minimal-docker/docker
-mkdir -p models/Stable-diffusion
-aria2c -d models/Stable-diffusion https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/v2-1_768-ema-pruned.ckpt
-aria2c -d models/Stable-diffusion -o v2-1_768-ema-pruned.yaml https://raw.githubusercontent.com/Stability-AI/stablediffusion/main/configs/stable-diffusion/v2-inference-v.yaml
-ls -l models/Stable-diffusion
-sha256sum models/Stable-diffusion/v2-1_768-ema-pruned.ckpt
-# should be same SHA256 as https://huggingface.co/stabilityai/stable-diffusion-2-1/blob/main/v2-1_768-ema-pruned.ckpt
-cd ..
+sudo apt install -y docker-compose-plugin
 ```
 
-TODO: create a Dockerfile for model downloads
+## Download model files
 
+Here, we are going to download Stable Diffusion v2-1 model (`v2-1_768-ema-pruned.ckpt`).
+
+- https://huggingface.co/stabilityai/stable-diffusion-2-1
+- https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features#stable-diffusion-20
+
+```sh
+cd download-sd-v2-1
+docker compose build
+docker compose up
+# confirm SHA256. see https://huggingface.co/stabilityai/stable-diffusion-2-1/blob/main/v2-1_768-ema-pruned.ckpt
+cd ..
+```
 
 ## Build image
 
 - https://docs.docker.com/compose/install/linux/#install-using-the-repository
 
 ```sh
-sudo apt update
-sudo apt install -y docker-compose-plugin
-cd docker  # or docker-cpu
+cd webui  # or webui-cpu
 docker compose build
 ```
 
 ## Start webui
+
+Move model files from download directory.
+
+```sh
+mv ../download-sd-v2-1/models/Stable-diffusion models
+```
+
+Start webui.
 
 ```sh
 docker compose up -d
@@ -86,7 +99,7 @@ Follow this instruction.
 
 - https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project
 
-## Enable billing
+### Enable billing
 
 Follow this instruction.
 
@@ -99,17 +112,17 @@ Follow this instruction.
 - Open https://console.cloud.google.com/compute/instances
 - Press `CREATE INSTANCE`
   - Region - `us-central1 (Iowa)`
-  - Zone - `us-central1-f`
+  - Zone - `us-central1-f`  # whatever you want
   - Machine configuration
     - Machine family - `GPU`
     - GPU type - `NVIDIA T4`  # or higher
     - Machine type - `n1-highmem-4 (4 vCPU, 26GB memory)`  # or `n1-standard-4`
   - Boot disk - `CHANGE`
     - Operating system - `Deep Learning on Linux`
-    - Version - `Debian 10 based Deep Learning VM with M100`
-    - Size (GB) - `100`  # or `50`
+    - Version - `Debian 10 based Deep Learning VM with M100`  # no need to choose PyTorch installed
+    - Size (GB) - `100`  # `50` might be too small
     - Press `SELECT`
-  - Identity and API access  # if you use GCS
+  - Identity and API access  # if you use GCS buckets to save outputs
     - Access scopes - `Set access for each API`
       - Storage - `Full`
   - Advanced options
@@ -173,6 +186,8 @@ If you `DELETE` the VM instance, you will not be charged anything (as far as I k
 However, if you `STOP` the VM instance, you will be charged for resources (e.g. persistent disk) until you `DELETE` it. You should `DELETE` if you do not use it for a long time (though you must setup the environment again).
 
 ### Delete the project
+
+If you want to confirm that you will not be charged anymore, delete the project.
 
 - https://cloud.google.com/resource-manager/docs/creating-managing-projects#shutting_down_projects
 
