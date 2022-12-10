@@ -25,22 +25,26 @@ sudo apt install -y docker-compose-plugin
 Here, we are going to download Stable Diffusion v2-1 models (`v2-1_768-ema-pruned.ckpt` and ` v2-1_512-ema-pruned.ckpt`).
 
 - https://huggingface.co/stabilityai/stable-diffusion-2-1
+- https://huggingface.co/stabilityai/stable-diffusion-2-1-base
 - https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features#stable-diffusion-20
 
 ```sh
 git clone https://github.com/susumuota/stable-diffusion-minimal-docker
 cd stable-diffusion-minimal-docker/download-sd-v2-1
-docker compose build
-docker compose up --no-log-prefix
-docker compose down
+docker compose run --rm --build download
 sudo chown -R $(id -u):$(id -g) models  # TODO: find a better way
 ls -l models/Stable-diffusion
-# total 5092652
-# -rw-r--r-- 1 user user 5214865159 Dec  8 09:23 v2-1_768-ema-pruned.ckpt
-# -rw-r--r-- 1 user user       1815 Dec  8 09:23 v2-1_768-ema-pruned.yaml
-sha256sum models/Stable-diffusion/v2-1_768-ema-pruned.ckpt
-# compare SHA256 with https://huggingface.co/stabilityai/stable-diffusion-2-1/blob/main/v2-1_768-ema-pruned.ckpt
+# total 20370592
+# -rw-r--r--  1 user  user  5214865159 12  9 04:12 v2-1_512-ema-pruned.ckpt
+# -rw-r--r--  1 user  user        1789 12  9 04:12 v2-1_512-ema-pruned.yaml
+# -rw-r--r--  1 user  user  5214865159 12  8 19:36 v2-1_768-ema-pruned.ckpt
+# -rw-r--r--  1 user  user        1815 12  8 19:36 v2-1_768-ema-pruned.yaml
+docker compose run --rm download sha256sum models/Stable-diffusion/v2-1_768-ema-pruned.ckpt
 # it should be "ad2a33c361c1f593c4a1fb32ea81afce2b5bb7d1983c6b94793a26a3b54b08a0"
+# see https://huggingface.co/stabilityai/stable-diffusion-2-1/blob/main/v2-1_768-ema-pruned.ckpt
+docker compose run --rm download sha256sum models/Stable-diffusion/v2-1_512-ema-pruned.ckpt
+# it should be "88ecb782561455673c4b78d05093494b9c539fc6bfc08f3a9a4a0dd7b0b10f36"
+# see https://huggingface.co/stabilityai/stable-diffusion-2-1-base/blob/main/v2-1_512-ema-pruned.ckpt
 cd ..
 ```
 
@@ -51,19 +55,17 @@ cd webui  # or webui-cpu
 docker compose build
 ```
 
-## Start webui
-
-Copy model files from download directory or whatever you want.
+## Copy model files
 
 ```sh
 mv ../download-sd-v2-1/models/Stable-diffusion/* models/Stable-diffusion
 ```
 
-Start webui.
+## Start webui
 
 ```sh
-docker compose up -d
-docker compose logs --no-log-prefix -f
+docker compose up -d                    # start webui in background
+docker compose logs --no-log-prefix -f  # show logs
 ```
 
 Access http://localhost:7860/
@@ -189,10 +191,10 @@ Then follow the instructions on `Download model files` section above.
 
 ### Delete the instance
 
-**DON'T FORGET TO DELETE INSTANCES**
-
 - https://console.cloud.google.com/compute/instances
 - https://cloud.google.com/compute/docs/instances/stop-start-instance#billing
+
+**DON'T FORGET TO DELETE INSTANCES**
 
 - Check `instance-1` on the VM list.
 - Press `DELETE` button.
