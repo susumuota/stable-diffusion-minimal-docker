@@ -24,12 +24,13 @@ RUN pip install https://github.com/AbdBarho/stable-diffusion-webui-docker/releas
 #   according to this page, https://huggingface.co/docs/huggingface_hub/how-to-downstream
 #   I guess there is a code like this somewhere.
 #     hf_hub_download(repo_id="laion/CLIP-ViT-H-14-laion2B-s32B-b79K", filename="open_clip_pytorch_model.bin", revision="58a1e03a7acfacbe6b95ebc24ae0394eda6a14fc")
-#   there should be an another smart way to avoid downloading...
-RUN mkdir -p /root/.cache/huggingface/hub/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K/blobs && \
-  mkdir -p /root/.cache/huggingface/hub/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K/refs && \
-  mkdir -p /root/.cache/huggingface/hub/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K/snapshots/58a1e03a7acfacbe6b95ebc24ae0394eda6a14fc && \
-  echo -n 58a1e03a7acfacbe6b95ebc24ae0394eda6a14fc > /root/.cache/huggingface/hub/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K/refs/main && \
-  aria2c -d /root/.cache/huggingface/hub/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K/blobs -o 9a78ef8e8c73fd0df621682e7a8e8eb36c6916cb3c16b291a082ecd52ab79cc4 https://huggingface.co/laion/CLIP-ViT-H-14-laion2B-s32B-b79K/resolve/main/open_clip_pytorch_model.bin && \
-  (cd /root/.cache/huggingface/hub/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K/snapshots/58a1e03a7acfacbe6b95ebc24ae0394eda6a14fc ; ln -s ../../blobs/9a78ef8e8c73fd0df621682e7a8e8eb36c6916cb3c16b291a082ecd52ab79cc4 open_clip_pytorch_model.bin)
+RUN mkdir -p /root/.cache/huggingface/hub/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K && \
+  cd /root/.cache/huggingface/hub/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K && \
+  mkdir -p refs blobs snapshots/58a1e03a7acfacbe6b95ebc24ae0394eda6a14fc && \
+  echo -n 58a1e03a7acfacbe6b95ebc24ae0394eda6a14fc > refs/main && \
+  aria2c -d blobs -o 9a78ef8e8c73fd0df621682e7a8e8eb36c6916cb3c16b291a082ecd52ab79cc4 \
+    https://huggingface.co/laion/CLIP-ViT-H-14-laion2B-s32B-b79K/resolve/main/open_clip_pytorch_model.bin && \
+  cd snapshots/58a1e03a7acfacbe6b95ebc24ae0394eda6a14fc && \
+  ln -s ../../blobs/9a78ef8e8c73fd0df621682e7a8e8eb36c6916cb3c16b291a082ecd52ab79cc4 open_clip_pytorch_model.bin
 
 CMD [ "python", "-u", "launch.py", "--xformers", "--no-half-vae", "--listen" ]
