@@ -31,7 +31,8 @@ Here, we are going to download Stable Diffusion v2-1 models (`v2-1_768-ema-prune
 ```sh
 git clone https://github.com/susumuota/stable-diffusion-minimal-docker
 cd stable-diffusion-minimal-docker/download-sd-v2-1
-docker compose run --rm --build download
+docker compose build
+docker compose run --rm download
 sudo chown -R $(id -u):$(id -g) models  # TODO: find a better way
 ls -l models/Stable-diffusion
 # total 20370592
