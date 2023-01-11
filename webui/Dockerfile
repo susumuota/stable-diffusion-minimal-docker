@@ -17,20 +17,17 @@ WORKDIR /stable-diffusion-webui
 RUN python -u launch.py --skip-torch-cuda-test --exit
 
 # TODO: "pip install xformers" will be available, see https://github.com/facebookresearch/xformers/issues/533
-RUN pip install https://github.com/AbdBarho/stable-diffusion-webui-docker/releases/download/3.1.0/xformers-0.0.15.dev0+4e3631d.d20221125-cp310-cp310-linux_x86_64.whl
+RUN pip install https://github.com/AbdBarho/stable-diffusion-webui-docker/releases/download/4.0.0/xformers-0.0.16rc393-cp310-cp310-manylinux2014_x86_64.whl
 
+# for SD 1.4/1.5 models
+# this is optional but it avoids downloading a 1.71GB file on everytime "docker run"
+RUN git clone https://huggingface.co/openai/clip-vit-large-patch14 openai/clip-vit-large-patch14 && \
+  mv openai/clip-vit-large-patch14/pytorch_model.bin openai/clip-vit-large-patch14/pytorch_model.bin.bak && \
+  aria2c -d openai/clip-vit-large-patch14 https://huggingface.co/openai/clip-vit-large-patch14/resolve/main/pytorch_model.bin
+
+# for SD 2.0/2.1 models
 # this is optional but it avoids downloading a 3.94GB file on everytime "docker run"
-# TODO: refine.
-#   according to this page, https://huggingface.co/docs/huggingface_hub/how-to-downstream
-#   I guess there is a code like this somewhere.
-#     hf_hub_download(repo_id="laion/CLIP-ViT-H-14-laion2B-s32B-b79K", filename="open_clip_pytorch_model.bin", revision="58a1e03a7acfacbe6b95ebc24ae0394eda6a14fc")
-RUN mkdir -p /root/.cache/huggingface/hub/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K && \
-  cd /root/.cache/huggingface/hub/models--laion--CLIP-ViT-H-14-laion2B-s32B-b79K && \
-  mkdir -p refs blobs snapshots/58a1e03a7acfacbe6b95ebc24ae0394eda6a14fc && \
-  echo -n 58a1e03a7acfacbe6b95ebc24ae0394eda6a14fc > refs/main && \
-  aria2c -d blobs -o 9a78ef8e8c73fd0df621682e7a8e8eb36c6916cb3c16b291a082ecd52ab79cc4 \
-    https://huggingface.co/laion/CLIP-ViT-H-14-laion2B-s32B-b79K/resolve/main/open_clip_pytorch_model.bin && \
-  cd snapshots/58a1e03a7acfacbe6b95ebc24ae0394eda6a14fc && \
-  ln -s ../../blobs/9a78ef8e8c73fd0df621682e7a8e8eb36c6916cb3c16b291a082ecd52ab79cc4 open_clip_pytorch_model.bin
+RUN python -c "from huggingface_hub import hf_hub_download; hf_hub_download(repo_id='laion/CLIP-ViT-H-14-laion2B-s32B-b79K', filename='open_clip_pytorch_model.bin')"
+
 
 CMD [ "python", "-u", "launch.py", "--xformers", "--no-half-vae", "--listen" ]
