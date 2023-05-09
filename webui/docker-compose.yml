@@ -7,7 +7,7 @@ services:
     ports:
       - "7860:7860"
     volumes:
-      - ./models:/stable-diffusion-webui/models
+      - ./models/Stable-diffusion:/stable-diffusion-webui/models/Stable-diffusion
       - ./outputs:/stable-diffusion-webui/outputs
     deploy:
       resources:

@@ -11,16 +11,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   python3-pip \
   && rm -rf /var/lib/apt/lists/*
 
-# for SD 2.0/2.1 models
-# this is optional but it avoids downloading a 3.94GB file on everytime "docker run"
-# RUN pip install huggingface-hub && python -c "from huggingface_hub import hf_hub_download; hf_hub_download(repo_id='laion/CLIP-ViT-H-14-laion2B-s32B-b79K', filename='open_clip_pytorch_model.bin')"
-
-# TODO: "pip install xformers" will be available, see https://github.com/facebookresearch/xformers/issues/533
-RUN pip install xformers==0.0.16rc425
 
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
 WORKDIR /stable-diffusion-webui
 
-RUN python -u launch.py --skip-torch-cuda-test --exit
+RUN python -u launch.py --skip-torch-cuda-test --xformers --exit
+
+# this will fix the error:
+#   `Could not load library libcudnn_cnn_infer.so.8. Error: libnvrtc.so: cannot open shared object file: No such file or directory`
+#
+# but I guess this error will be fixed by next PyTorch release
+# https://discuss.pytorch.org/t/could-not-load-library-libcudnn-cnn-infer-so-8/175139/5
+RUN (cd /usr/local/lib/python3.10/dist-packages/torch/lib && ln -s libnvrtc-672ee683.so.11.2 libnvrtc.so)
 
 CMD [ "python", "-u", "launch.py", "--xformers", "--no-half-vae", "--listen" ]
