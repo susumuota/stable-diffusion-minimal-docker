@@ -44,7 +44,7 @@ If you use your local machine, you can skip to `Build image` section.
     - GPU type - `NVIDIA L4`  # or T4
     - Machine type - `n2-standard-4 (4 vCPU, 16GB memory)`  # or `n1-standard-4` for T4
   - Boot disk - `CHANGE`
-    - Operating system - `Deep Learning on Linux`
+    - Operating system - `Ubuntu`
     - Version - `Ubuntu 22.04 LTS`  # description is `x86/64, amd64 jammy image built on 2023-04-29, supports Shielded VM features`
     - Size (GB) - `50`  # `50` is enough for inference (not training)
     - Press `SELECT`
