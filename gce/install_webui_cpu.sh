@@ -17,8 +17,7 @@ git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
 cd stable-diffusion-webui
 
 sed -i -e "/pip install torch/ s/cu[0-9]\{3,\}/cpu/g" launch.py
+sed -i -e 's/    return "cpu"/    torch.set_num_threads(4)\n    return "cpu"/' modules/devices.py
 python -u launch.py --skip-torch-cuda-test --exit
-
-(cd ~/.local/lib/python3.10/site-packages/torch/lib && ln -s libnvrtc-672ee683.so.11.2 libnvrtc.so)
 
 echo "run 'python -u launch.py --skip-torch-cuda-test --use-cpu=all --no-half --no-half-vae'"
