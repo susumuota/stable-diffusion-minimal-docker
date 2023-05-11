@@ -10,7 +10,6 @@ sudo apt-get update && sudo apt-get install -y --no-install-recommends \
   python3 \
   python3-pip \
   screen \
-  && rm -rf /var/lib/apt/lists/*
 
 
 git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
