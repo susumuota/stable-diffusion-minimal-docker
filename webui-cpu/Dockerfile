@@ -17,7 +17,7 @@ WORKDIR /stable-diffusion-webui
 
 # replace "cu118" to "cpu"
 RUN sed -i -e "/pip install torch/ s/cu[0-9]\{3,\}/cpu/g" launch.py
-RUN sed -i -e 's/    return "cpu"/    torch.set_num_threads(4)\n    return "cpu"/' launch.py
+RUN sed -i -e 's/    return "cpu"/    torch.set_num_threads(4)\n    return "cpu"/' modules/devices.py
 RUN python -u launch.py --skip-torch-cuda-test --exit
 
 CMD [ "python", "-u", "launch.py", "--skip-torch-cuda-test", "--use-cpu=all", "--no-half", "--no-half-vae", "--listen" ]
