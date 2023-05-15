@@ -22,6 +22,7 @@ python -u launch.py --skip-torch-cuda-test --exit
 
 cat >> config.json <<EOF
 {
+    "export_for_4chan": false,
     "grid_save": false,
     "grid_save_to_dirs": false,
     "return_grid": false,
