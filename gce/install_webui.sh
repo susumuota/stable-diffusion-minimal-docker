@@ -15,11 +15,11 @@ sudo apt-get update && sudo apt-get install -y --no-install-recommends \
 git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
 cd stable-diffusion-webui
 
-pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
+pip install torch==2.0.0 torchvision==0.15.1 --extra-index-url https://download.pytorch.org/whl/cu118
 
 python -u launch.py --skip-torch-cuda-test --xformers --exit
 
-# (cd ~/.local/lib/python3.10/site-packages/torch/lib && ln -s libnvrtc-672ee683.so.11.2 libnvrtc.so)
+(cd ~/.local/lib/python3.10/site-packages/torch/lib && ln -s libnvrtc-672ee683.so.11.2 libnvrtc.so)
 
 cat >> config.json <<EOF
 {
@@ -29,7 +29,8 @@ cat >> config.json <<EOF
     "return_grid": false,
     "js_modal_lightbox_initially_zoomed": false,
     "live_previews_enable": false,
-    "show_progress_grid": false
+    "show_progress_grid": false,
+    "CLIP_stop_at_last_layers": 2
 }
 EOF
 

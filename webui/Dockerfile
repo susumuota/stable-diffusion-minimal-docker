@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
 WORKDIR /stable-diffusion-webui
 
-RUN pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
+RUN pip install torch==2.0.0 torchvision==0.15.1 --extra-index-url https://download.pytorch.org/whl/cu118
 
 RUN python -u launch.py --skip-torch-cuda-test --xformers --exit
 
@@ -24,6 +24,6 @@ RUN python -u launch.py --skip-torch-cuda-test --xformers --exit
 #
 # but I guess this error will be fixed by next PyTorch release
 # https://discuss.pytorch.org/t/could-not-load-library-libcudnn-cnn-infer-so-8/175139/5
-# RUN (cd /usr/local/lib/python3.10/dist-packages/torch/lib && ln -s libnvrtc-672ee683.so.11.2 libnvrtc.so)
+RUN (cd /usr/local/lib/python3.10/dist-packages/torch/lib && ln -s libnvrtc-672ee683.so.11.2 libnvrtc.so)
 
 CMD [ "python", "-u", "launch.py", "--xformers", "--no-half-vae", "--listen" ]

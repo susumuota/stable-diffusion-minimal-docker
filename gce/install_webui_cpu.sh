@@ -28,7 +28,8 @@ cat >> config.json <<EOF
     "return_grid": false,
     "js_modal_lightbox_initially_zoomed": false,
     "live_previews_enable": false,
-    "show_progress_grid": false
+    "show_progress_grid": false,
+    "CLIP_stop_at_last_layers": 2
 }
 EOF
 
