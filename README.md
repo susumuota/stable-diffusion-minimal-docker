@@ -45,7 +45,8 @@ If you use your local machine, you can skip to `Build image` section.
     - Machine type - `g2-standard-4 (4 vCPU, 16GB memory)`  # or `n1-standard-4` for T4
   - Boot disk - `CHANGE`
     - Operating system - `Ubuntu`
-    - Version - `Ubuntu 22.04 LTS`  # description is `x86/64, amd64 jammy image built on 2023-04-29, supports Shielded VM features`
+    - Version - `Ubuntu 22.04 LTS`  # description is `x86/64, amd64 jammy image built on 2023-06-06, supports Shielded VM features`
+    - Boot disk type - `SSD persistent disk`  # SSD is not so expensive now
     - Size (GB) - `50`  # `50` is enough for inference (not training)
     - Press `SELECT`
   - Identity and API access  # if you use GCS buckets to save outputs
@@ -87,15 +88,14 @@ gcloud compute ssh --zone "us-central1-a" "instance-1"  --project "(project id)"
 
 ```sh
 git clone https://github.com/susumuota/stable-diffusion-minimal-docker.git
-cd stable-diffusion-minimal-docker/gce
 ```
 
 ```sh
-bash ./install_cuda_drivers.sh
+bash ./stable-diffusion-minimal-docker/gce/install_cuda_drivers.sh
 sudo reboot                      # and ssh again
-bash ./install_docker.sh
+bash ./stable-diffusion-minimal-docker/gce/install_docker.sh
 sudo reboot                      # and ssh again
-bash ./install_nvidia_container_toolkit.sh
+bash ./stable-diffusion-minimal-docker/gce/install_nvidia_container_toolkit.sh
 ```
 
 Then follow the instructions on `Build image` section below.

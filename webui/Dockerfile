@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
 WORKDIR /stable-diffusion-webui
 
-RUN ./webui.sh -f --xformers --exit
+RUN ./webui.sh -f --xformers --skip-torch-cuda-test --exit
 
 COPY config.json .
 
