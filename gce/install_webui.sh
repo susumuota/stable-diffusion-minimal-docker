@@ -9,17 +9,14 @@ sudo apt-get update && sudo apt-get install -y --no-install-recommends \
   python-is-python3 \
   python3 \
   python3-pip \
+  python3-venv \
   screen \
 
 
 git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
 cd stable-diffusion-webui
 
-pip install torch==2.0.0 torchvision==0.15.1 --extra-index-url https://download.pytorch.org/whl/cu118
-
-python -u launch.py --skip-torch-cuda-test --xformers --exit
-
-(cd ~/.local/lib/python3.10/site-packages/torch/lib && ln -s libnvrtc-672ee683.so.11.2 libnvrtc.so)
+./webui.sh --xformers --exit
 
 cat >> config.json <<EOF
 {
@@ -34,4 +31,4 @@ cat >> config.json <<EOF
 }
 EOF
 
-echo "run 'python -u launch.py --xformers --no-half-vae'"
+echo "./webui.sh --xformers --no-half-vae"

@@ -9,16 +9,16 @@ sudo apt-get update && sudo apt-get install -y --no-install-recommends \
   python-is-python3 \
   python3 \
   python3-pip \
+  python3-venv \
   screen \
 
 
 git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
 cd stable-diffusion-webui
 
-sed -i -e "/pip install torch/ s/cu[0-9]\{3,\}/cpu/g" launch.py
-sed -i -e 's/    return "cpu"/    torch.set_num_threads(4)\n    return "cpu"/' modules/devices.py
+TORCH_INDEX_URL="https://download.pytorch.org/whl/cpu" ./webui.sh --skip-torch-cuda-test --exit
 
-python -u launch.py --skip-torch-cuda-test --exit
+sed -i -e 's/    return "cpu"/    torch.set_num_threads(8)\n    return "cpu"/' modules/devices.py
 
 cat >> config.json <<EOF
 {
@@ -33,4 +33,4 @@ cat >> config.json <<EOF
 }
 EOF
 
-echo "run 'python -u launch.py --skip-torch-cuda-test --use-cpu=all --no-half --no-half-vae'"
+echo "./webui.sh --skip-torch-cuda-test --use-cpu=all --no-half --no-half-vae"

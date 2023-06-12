@@ -8,6 +8,8 @@ services:
       - "7860:7860"
     volumes:
       - ./models/Stable-diffusion:/stable-diffusion-webui/models/Stable-diffusion
+      - ./models/VAE:/stable-diffusion-webui/models/VAE
+      - ./embeddings:/stable-diffusion-webui/embeddings
       - ./outputs:/stable-diffusion-webui/outputs
     deploy:
       resources:
