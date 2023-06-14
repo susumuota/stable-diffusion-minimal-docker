@@ -46,7 +46,7 @@ If you use your local machine, you can skip to `Build image` section.
   - Boot disk - `CHANGE`
     - Operating system - `Ubuntu`
     - Version - `Ubuntu 22.04 LTS`  # description is `x86/64, amd64 jammy image built on 2023-06-06, supports Shielded VM features`
-    - Boot disk type - `SSD persistent disk`  # SSD is not so expensive now
+    - Boot disk type - `SSD persistent disk`  # or `Balanced persistent disk` but SSD is not so expensive
     - Size (GB) - `50`  # `50` is enough for inference (not training)
     - Press `SELECT`
   - Identity and API access  # if you use GCS buckets to save outputs
@@ -62,7 +62,7 @@ Monthly estimate should be like this.
 
 > Monthly estimate
 >
-> $159.80
+> $163.30
 >
 > That's about $0.22 hourly
 
@@ -84,44 +84,65 @@ Open a terminal on the local machine and paste the clipboard and add `-- -L 7860
 gcloud compute ssh --zone "us-central1-a" "instance-1"  --project "(project id)" -- -L 7860:localhost:7860
 ```
 
-### Install CUDA drivers, Docker and nvidia-container-toolkit
+### Install CUDA drivers
 
 ```sh
 git clone https://github.com/susumuota/stable-diffusion-minimal-docker.git
 ```
 
 ```sh
+bash ./stable-diffusion-minimal-docker/gce/create_dotfiles.sh
 bash ./stable-diffusion-minimal-docker/gce/install_cuda_drivers.sh
-sudo reboot                      # and ssh again
+sudo reboot  # and ssh again
+```
+
+## Option 1: Run webui without Docker
+
+### Install webui
+
+```sh
+bash ./stable-diffusion-minimal-docker/gce/install_webui.sh
+cd stable-diffusion-webui
+```
+
+### Download and copy model files
+
+```sh
+wget ...
+cp *.ckpt models/Stable-diffusion
+```
+
+### Start webui
+
+```sh
+./webui.sh --xformers --no-half-vae
+```
+
+### Rsync outputs
+
+On GCE instance,
+
+```sh
+bash ~/stable-diffusion-minimal-docker/gce/rsync_remote.sh
+```
+
+On local machine,
+
+```sh
+bash ~/stable-diffusion-minimal-docker/gce/rsync_local.sh
+```
+
+## Option 2: Run webui with Docker
+
+### Install Docker and nvidia-container-toolkit
+
+```sh
 bash ./stable-diffusion-minimal-docker/gce/install_docker.sh
-sudo reboot                      # and ssh again
+sudo reboot  # and ssh again
 bash ./stable-diffusion-minimal-docker/gce/install_nvidia_container_toolkit.sh
 ```
 
-Then follow the instructions on `Build image` section below.
-
-### Delete the instance
-
-- https://console.cloud.google.com/compute/instances
-- https://cloud.google.com/compute/docs/instances/stop-start-instance#billing
-
-**DON'T FORGET TO DELETE INSTANCES**
-
-- Select `instance-1` in the VM list.
-- Press the `DELETE` button.
-
-If you `DELETE` the VM instance, you will not be charged (as far as I know).
-
-However, if you `STOP` the VM instance, you will be charged for resources (e.g. persistent disk) until you `DELETE` it. You should `DELETE` it if you are not going to use it for a long time (although you will have to setup the environment again).
-
-### Delete the project
-
-If you want to confirm that you will no longer be charged, delete the project.
-
-- https://cloud.google.com/resource-manager/docs/creating-managing-projects#shutting_down_projects
-
-
-## Build image
+### Build image
 
 Make sure you cloned this repository.
 
@@ -137,14 +158,14 @@ cd webui  # or webui-cpu
 docker compose build
 ```
 
-## Download and copy model files
+### Download and copy model files
 
 ```sh
 wget ...
 cp *.ckpt models/Stable-diffusion
 ```
 
-## Start webui
+### Start webui
 
 ```sh
 docker compose up -d                    # start webui in background
@@ -153,7 +174,7 @@ docker compose logs --no-log-prefix -f  # show logs
 
 Access http://localhost:7860/
 
-## Stop webui
+### Stop webui
 
 ```sh
 docker compose down
@@ -181,6 +202,26 @@ Or you can use `scp`. Open terminal on local machine,
 ```sh
 gcloud compute scp --zone "us-central1-a" --project "(project id)" instance-1:~/stable-diffusion-minimal-docker/docker/outputs.tgz .
 ```
+
+## Delete the instance
+
+- https://console.cloud.google.com/compute/instances
+- https://cloud.google.com/compute/docs/instances/stop-start-instance#billing
+
+**DON'T FORGET TO DELETE INSTANCES**
+
+- Select `instance-1` in the VM list.
+- Press the `DELETE` button.
+
+If you `DELETE` the VM instance, you will not be charged (as far as I know).
+
+However, if you `STOP` the VM instance, you will be charged for resources (e.g. persistent disk) until you `DELETE` it. You should `DELETE` it if you are not going to use it for a long time (although you will have to setup the environment again).
+
+## Delete the project
+
+If you want to confirm that you will no longer be charged, delete the project.
+
+- https://cloud.google.com/resource-manager/docs/creating-managing-projects#shutting_down_projects
 
 ## Links
 
