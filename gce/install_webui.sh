@@ -2,7 +2,6 @@
 
 sudo apt-get update && sudo apt-get install -y --no-install-recommends \
   aria2 \
-  emacs \
   git \
   libgl1 \
   libglib2.0-0 \
@@ -10,7 +9,6 @@ sudo apt-get update && sudo apt-get install -y --no-install-recommends \
   python3 \
   python3-pip \
   python3-venv \
-  screen \
 
 
 git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
