@@ -75,7 +75,7 @@ After you press `CREATE`, instances table will show.
 If you prefer to use gcloud CLI, you can use the following commands.
 
 ```sh
-export PROJECT_ID="stable-diffusion-367007"
+export PROJECT_ID="stable-diffusion-367007"  # change to your project ID
 export ZONE="us-central1-a"
 export INSTANCE_NAME="instance-1"
 export MACHINE_TYPE="g2-standard-4"   # for NVIDIA L4
@@ -97,9 +97,9 @@ gcloud compute instances create $INSTANCE_NAME \
   --create-disk=boot=yes,image-project=${IMAGE_PROJECT},image-family=${IMAGE_FAMILY},name=${DISK_NAME},size=${DISK_SIZE},type=${DISK_TYPE} \
   --accelerator=count=1,type=${ACCELERATOR} \
   --provisioning-model=$PROVISIONING_MODEL
-gcloud compute instances describe $INSTANCE_NAME --project=$PROJECT_ID --zone=$ZONE
-gcloud compute instances list --project=$PROJECT_ID
-# gcloud compute instances delete $INSTANCE_NAME --project=$PROJECT_ID --zone=$ZONE
+# gcloud compute instances describe $INSTANCE_NAME --project=$PROJECT_ID --zone=$ZONE  # to check the status
+# gcloud compute instances list --project=$PROJECT_ID                                  # to list instances
+# gcloud compute instances delete $INSTANCE_NAME --project=$PROJECT_ID --zone=$ZONE    # to delete the instance
 ```
 
 ### SSH to VM
