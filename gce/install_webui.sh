@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt-get update && sudo apt-get install -y --no-install-recommends \
+sudo apt-get update && sudo apt-get install -y \
   aria2 \
   git \
   libgl1 \
@@ -13,8 +13,6 @@ sudo apt-get update && sudo apt-get install -y --no-install-recommends \
 
 git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
 cd stable-diffusion-webui
-
-./webui.sh --xformers --exit
 
 cat >> config.json <<EOF
 {
@@ -29,4 +27,6 @@ cat >> config.json <<EOF
 }
 EOF
 
-echo "./webui.sh --xformers --no-half-vae"
+./webui.sh --xformers --exit
+
+echo "./webui.sh --xformers"

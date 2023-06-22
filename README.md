@@ -70,6 +70,38 @@ After you press `CREATE`, instances table will show.
 
 ![instances-table](https://user-images.githubusercontent.com/1632335/236405729-6f870c9c-9ace-47eb-a870-506313e19645.png)
 
+- Commands to create an instance with gcloud CLI
+
+If you prefer to use gcloud CLI, you can use the following commands.
+
+```sh
+export PROJECT_ID="stable-diffusion-367007"
+export ZONE="us-central1-a"
+export INSTANCE_NAME="instance-1"
+export MACHINE_TYPE="g2-standard-4"   # for NVIDIA L4
+# export MACHINE_TYPE="n1-standard-4"   # for NVIDIA T4
+export SCOPES="default,storage-full"
+export IMAGE_PROJECT="ubuntu-os-cloud"
+export IMAGE_FAMILY="ubuntu-2204-lts"
+export DISK_NAME="disk-1"
+export DISK_SIZE="50GB"
+export DISK_TYPE="pd-ssd"
+export ACCELERATOR="nvidia-l4"        # for NVIDIA L4
+# export ACCELERATOR="nvidia-tesla-t4"  # for NVIDIA T4
+export PROVISIONING_MODEL="SPOT"      # or "STANDARD"
+gcloud compute instances create $INSTANCE_NAME \
+  --project=$PROJECT_ID \
+  --zone=$ZONE \
+  --machine-type=$MACHINE_TYPE \
+  --scopes=$SCOPES \
+  --create-disk=boot=yes,image-project=${IMAGE_PROJECT},image-family=${IMAGE_FAMILY},name=${DISK_NAME},size=${DISK_SIZE},type=${DISK_TYPE} \
+  --accelerator=count=1,type=${ACCELERATOR} \
+  --provisioning-model=$PROVISIONING_MODEL
+gcloud compute instances describe $INSTANCE_NAME --project=$PROJECT_ID --zone=$ZONE
+gcloud compute instances list --project=$PROJECT_ID
+# gcloud compute instances delete $INSTANCE_NAME --project=$PROJECT_ID --zone=$ZONE
+```
+
 ### SSH to VM
 
 ![ssh_options](https://user-images.githubusercontent.com/1632335/236405480-f673a330-54c2-45b4-9e92-47f953486123.png)
@@ -81,7 +113,7 @@ After you press `CREATE`, instances table will show.
 Open a terminal on the local machine and paste the clipboard and add `-- -L 7860:localhost:7860` for port forwarding.
 
 ```sh
-gcloud compute ssh --zone "us-central1-a" "instance-1"  --project "(project id)" -- -L 7860:localhost:7860
+gcloud compute ssh --zone=$ZONE $INSTANCE_NAME --project=$PROJECT_ID -- -L 7860:localhost:7860
 ```
 
 ### Install CUDA drivers
@@ -93,7 +125,8 @@ git clone https://github.com/susumuota/stable-diffusion-minimal-docker.git
 ```sh
 bash ./stable-diffusion-minimal-docker/gce/create_dotfiles.sh
 bash ./stable-diffusion-minimal-docker/gce/install_cuda_drivers.sh
-sudo reboot  # and ssh again
+sudo reboot
+# and ssh again
 ```
 
 ## Option 1: Run webui without Docker
@@ -101,35 +134,21 @@ sudo reboot  # and ssh again
 ### Install webui
 
 ```sh
+screen  # sometimes ssh connection gets lost. you can recover session with `screen -r`
 bash ./stable-diffusion-minimal-docker/gce/install_webui.sh
 cd stable-diffusion-webui
 ```
 
-### Download and copy model files
+### Download model files
 
 ```sh
-wget ...
-cp *.ckpt models/Stable-diffusion
+aria2c -x 5 "https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors" -d "models/Stable-diffusion" -o "v1-5-pruned-emaonly.safetensors"
 ```
 
 ### Start webui
 
 ```sh
-./webui.sh --xformers --no-half-vae
-```
-
-### Rsync outputs
-
-On GCE instance,
-
-```sh
-bash ~/stable-diffusion-minimal-docker/gce/rsync_remote.sh
-```
-
-On local machine,
-
-```sh
-bash ~/stable-diffusion-minimal-docker/gce/rsync_local.sh
+./webui.sh --xformers
 ```
 
 ## Option 2: Run webui with Docker
@@ -158,11 +177,10 @@ cd webui  # or webui-cpu
 docker compose build
 ```
 
-### Download and copy model files
+### Download model files
 
 ```sh
-wget ...
-cp *.ckpt models/Stable-diffusion
+aria2c -x 5 "https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors" -d "models/Stable-diffusion" -o "v1-5-pruned-emaonly.safetensors"
 ```
 
 ### Start webui
@@ -180,28 +198,27 @@ Access http://localhost:7860/
 docker compose down
 ```
 
-## Copy outputs
+### Rsync outputs
 
-[Google Cloud Storage (GCS)](https://cloud.google.com/storage) might be convenient to transfer outputs data to your local computer.
-
-- https://cloud.google.com/storage/docs/gsutil/commands/mb
-- https://cloud.google.com/storage/docs/gsutil/commands/cp
-- https://cloud.google.com/storage/docs/gsutil/commands/rb
+Create a bucket on GCS. e.g. `gs://sd-outputs-1`. Location `us-central1` must be same as the instance.
 
 ```sh
-tar cfz outputs.tgz outputs
-gsutil mb -l us-central1 gs://sd-outputs-2           # create a bucket
-gsutil cp outputs.tgz gs://sd-outputs-2/             # copy to the bucket
-# gsutil rb gs://sd-outputs-2/                       # remove the bucket
+gsutil mb -l us-central1 gs://sd-outputs-1
 ```
 
-Or you can use `scp`. Open terminal on local machine,
-
-- https://cloud.google.com/sdk/gcloud/reference/compute/scp
+On GCE instance,
 
 ```sh
-gcloud compute scp --zone "us-central1-a" --project "(project id)" instance-1:~/stable-diffusion-minimal-docker/docker/outputs.tgz .
+bash ~/stable-diffusion-minimal-docker/gce/rsync_remote.sh
 ```
+
+On local machine,
+
+```sh
+bash ~/stable-diffusion-minimal-docker/gce/rsync_local.sh
+```
+
+Then, check `outputs` directory on local machine periodically.
 
 ## Delete the instance
 

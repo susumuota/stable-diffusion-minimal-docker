@@ -14,10 +14,6 @@ sudo apt-get update && sudo apt-get install -y --no-install-recommends \
 git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
 cd stable-diffusion-webui
 
-TORCH_INDEX_URL="https://download.pytorch.org/whl/cpu" ./webui.sh --skip-torch-cuda-test --exit
-
-sed -i -e 's/    return "cpu"/    torch.set_num_threads(8)\n    return "cpu"/' modules/devices.py
-
 cat >> config.json <<EOF
 {
     "export_for_4chan": false,
@@ -30,5 +26,9 @@ cat >> config.json <<EOF
     "CLIP_stop_at_last_layers": 2
 }
 EOF
+
+TORCH_INDEX_URL="https://download.pytorch.org/whl/cpu" ./webui.sh --skip-torch-cuda-test --exit
+
+sed -i -e 's/    return "cpu"/    torch.set_num_threads(8)\n    return "cpu"/' modules/devices.py
 
 echo "./webui.sh --skip-torch-cuda-test --use-cpu=all --no-half --no-half-vae"
