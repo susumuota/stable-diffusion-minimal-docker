@@ -1,14 +1,15 @@
 #!/bin/bash
 
 sudo apt-get update && sudo apt-get install -y --no-install-recommends \
-  aria2 \
   git \
+  google-perftools \
   libgl1 \
   libglib2.0-0 \
   python-is-python3 \
   python3 \
   python3-pip \
   python3-venv \
+  && rm -rf /var/lib/apt/lists/*
 
 
 git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
@@ -28,7 +29,6 @@ cat >> config.json <<EOF
 EOF
 
 TORCH_INDEX_URL="https://download.pytorch.org/whl/cpu" ./webui.sh --skip-torch-cuda-test --exit
-
 sed -i -e 's/    return "cpu"/    torch.set_num_threads(8)\n    return "cpu"/' modules/devices.py
 
 echo "./webui.sh --skip-torch-cuda-test --use-cpu=all --no-half --no-half-vae"

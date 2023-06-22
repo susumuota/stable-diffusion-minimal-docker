@@ -3,6 +3,7 @@ FROM ubuntu:22.04
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
   git \
+  google-perftools \
   libgl1 \
   libglib2.0-0 \
   python-is-python3 \
@@ -18,7 +19,6 @@ WORKDIR /stable-diffusion-webui
 COPY config.json .
 
 RUN TORCH_INDEX_URL="https://download.pytorch.org/whl/cpu" ./webui.sh -f --skip-torch-cuda-test --exit
-
 RUN sed -i -e 's/    return "cpu"/    torch.set_num_threads(8)\n    return "cpu"/' modules/devices.py
 
 CMD [ "./webui.sh", "-f", "--skip-torch-cuda-test", "--use-cpu=all", "--no-half", "--no-half-vae", "--listen" ]

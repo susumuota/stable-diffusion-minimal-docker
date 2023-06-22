@@ -1,14 +1,15 @@
 #!/bin/bash
 
-sudo apt-get update && sudo apt-get install -y \
-  aria2 \
+sudo apt-get update && sudo apt-get install -y --no-install-recommends \
   git \
+  google-perftools \
   libgl1 \
   libglib2.0-0 \
   python-is-python3 \
   python3 \
   python3-pip \
   python3-venv \
+  && rm -rf /var/lib/apt/lists/*
 
 
 git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git

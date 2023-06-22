@@ -3,6 +3,7 @@ FROM ubuntu:22.04
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
   git \
+  google-perftools \
   libgl1 \
   libglib2.0-0 \
   python-is-python3 \

@@ -145,7 +145,9 @@ cd stable-diffusion-webui
 ### Download model files
 
 ```sh
+sudo apt-get install -y aria2
 aria2c -x 5 "https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors" -d "models/Stable-diffusion" -o "v1-5-pruned-emaonly.safetensors"
+aria2c -x 5 "https://huggingface.co/stabilityai/sd-vae-ft-mse-original/resolve/main/vae-ft-mse-840000-ema-pruned.safetensors" -d "models/VAE" -o "vae-ft-mse-840000-ema-pruned.safetensors"
 ```
 
 ### Start webui
@@ -160,7 +162,11 @@ aria2c -x 5 "https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/
 
 ```sh
 bash ./stable-diffusion-minimal-docker/gce/install_docker.sh
-sudo reboot  # and ssh again
+sudo reboot
+# and ssh again
+```
+
+```sh
 bash ./stable-diffusion-minimal-docker/gce/install_nvidia_container_toolkit.sh
 ```
 
@@ -183,7 +189,9 @@ docker compose build
 ### Download model files
 
 ```sh
+sudo apt-get install -y aria2
 aria2c -x 5 "https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors" -d "models/Stable-diffusion" -o "v1-5-pruned-emaonly.safetensors"
+aria2c -x 5 "https://huggingface.co/stabilityai/sd-vae-ft-mse-original/resolve/main/vae-ft-mse-840000-ema-pruned.safetensors" -d "models/VAE" -o "vae-ft-mse-840000-ema-pruned.safetensors"
 ```
 
 ### Start webui
@@ -212,6 +220,7 @@ gsutil mb -l us-central1 gs://sd-outputs-1
 On GCE instance,
 
 ```sh
+cd ~/stable-diffusion-minimal-docker/webui
 bash ~/stable-diffusion-minimal-docker/gce/rsync_remote.sh
 ```
 
