@@ -89,6 +89,9 @@ export DISK_TYPE="pd-ssd"
 export ACCELERATOR="nvidia-l4"        # for NVIDIA L4
 # export ACCELERATOR="nvidia-tesla-t4"  # for NVIDIA T4
 export PROVISIONING_MODEL="SPOT"      # or "STANDARD"
+```
+
+```sh
 gcloud compute instances create $INSTANCE_NAME \
   --project=$PROJECT_ID \
   --zone=$ZONE \
