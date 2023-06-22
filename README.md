@@ -45,7 +45,7 @@ If you use your local machine, you can skip to `Build image` section.
     - Machine type - `g2-standard-4 (4 vCPU, 16GB memory)`  # or `n1-standard-4` for T4
   - Boot disk - `CHANGE`
     - Operating system - `Ubuntu`
-    - Version - `Ubuntu 22.04 LTS`  # description is `x86/64, amd64 jammy image built on 2023-06-06, supports Shielded VM features`
+    - Version - `Ubuntu 22.04 LTS`  # description is `x86/64, amd64 jammy image built on ...`
     - Boot disk type - `SSD persistent disk`  # or `Balanced persistent disk` but SSD is not so expensive
     - Size (GB) - `50`  # `50` is enough for inference (not training)
     - Press `SELECT`
@@ -100,9 +100,17 @@ gcloud compute instances create $INSTANCE_NAME \
   --create-disk=boot=yes,image-project=${IMAGE_PROJECT},image-family=${IMAGE_FAMILY},name=${DISK_NAME},size=${DISK_SIZE},type=${DISK_TYPE} \
   --accelerator=count=1,type=${ACCELERATOR} \
   --provisioning-model=$PROVISIONING_MODEL
-# gcloud compute instances describe $INSTANCE_NAME --project=$PROJECT_ID --zone=$ZONE  # to check the status
-# gcloud compute instances list --project=$PROJECT_ID                                  # to list instances
-# gcloud compute instances delete $INSTANCE_NAME --project=$PROJECT_ID --zone=$ZONE    # to delete the instance
+```
+
+```sh
+# to check the status
+# gcloud compute instances describe $INSTANCE_NAME --project=$PROJECT_ID --zone=$ZONE
+
+# to list instances
+# gcloud compute instances list --project=$PROJECT_ID
+
+# to delete the instance
+# gcloud compute instances delete $INSTANCE_NAME --project=$PROJECT_ID --zone=$ZONE
 ```
 
 ### SSH to VM
@@ -123,9 +131,6 @@ gcloud compute ssh --zone=$ZONE $INSTANCE_NAME --project=$PROJECT_ID -- -L 7860:
 
 ```sh
 git clone https://github.com/susumuota/stable-diffusion-minimal-docker.git
-```
-
-```sh
 bash ./stable-diffusion-minimal-docker/gce/create_dotfiles.sh
 bash ./stable-diffusion-minimal-docker/gce/install_cuda_drivers.sh
 sudo reboot
