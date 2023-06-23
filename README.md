@@ -225,7 +225,7 @@ gsutil mb -l us-central1 gs://sd-outputs-1
 On GCE instance,
 
 ```sh
-cd ~/stable-diffusion-minimal-docker/webui
+cd ~/stable-diffusion-webui
 bash ~/stable-diffusion-minimal-docker/gce/rsync_remote.sh
 ```
 
