@@ -148,9 +148,19 @@ screen
 ### Install webui
 
 ```sh
-screen  # sometimes ssh connection gets lost. you can recover session with `screen -r`
 bash ./stable-diffusion-minimal-docker/gce/install_webui.sh
 cd stable-diffusion-webui
+```
+
+### Install fonts
+
+If you use SuperMerger extension, you need to install fonts.
+
+```sh
+source venv/bin/activate
+pip install fonts font-roboto
+deactivate
+mkdir -p /tmp/gradio
 ```
 
 ### Download model files
@@ -179,6 +189,7 @@ sudo reboot
 
 ```sh
 bash ./stable-diffusion-minimal-docker/gce/install_nvidia_container_toolkit.sh
+# you don't need to reboot here
 ```
 
 ### Build image
