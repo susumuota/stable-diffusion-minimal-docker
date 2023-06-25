@@ -137,6 +137,12 @@ sudo reboot
 # and ssh again
 ```
 
+Start `screen`. Sometimes ssh connection gets lost. You can recover session with `screen -r`.
+
+```sh
+screen
+```
+
 ## Option 1: Run webui without Docker
 
 ### Install webui
