@@ -154,7 +154,7 @@ cd stable-diffusion-webui
 
 ### Install fonts
 
-If you use SuperMerger extension, you need to install fonts.
+Some extension need to install fonts.
 
 ```sh
 source venv/bin/activate
