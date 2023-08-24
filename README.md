@@ -103,14 +103,8 @@ gcloud compute instances create $INSTANCE_NAME \
 ```
 
 ```sh
-# to check the status
-# gcloud compute instances describe $INSTANCE_NAME --project=$PROJECT_ID --zone=$ZONE
-
-# to list instances
-# gcloud compute instances list --project=$PROJECT_ID
-
-# to delete the instance
-# gcloud compute instances delete $INSTANCE_NAME --project=$PROJECT_ID --zone=$ZONE
+gcloud compute instances describe $INSTANCE_NAME --project=$PROJECT_ID --zone=$ZONE
+gcloud compute instances list --project=$PROJECT_ID
 ```
 
 ### SSH to VM
@@ -148,19 +142,7 @@ screen
 ### Install webui
 
 ```sh
-bash ./stable-diffusion-minimal-docker/gce/install_webui.sh
-cd stable-diffusion-webui
-```
-
-### Install fonts
-
-Some extension need to install fonts.
-
-```sh
-source venv/bin/activate
-pip install fonts font-roboto
-deactivate
-mkdir -p /tmp/gradio
+bash ./stable-diffusion-minimal-docker/gce/install_webui.sh && cd stable-diffusion-webui
 ```
 
 ### Download model files
@@ -263,6 +245,11 @@ Then, check `outputs` directory on local machine periodically.
 
 - Select `instance-1` in the VM list.
 - Press the `DELETE` button.
+
+```sh
+gcloud compute instances delete $INSTANCE_NAME --project=$PROJECT_ID --zone=$ZONE
+gcloud compute instances list --project=$PROJECT_ID
+```
 
 If you `DELETE` the VM instance, you will not be charged (as far as I know).
 
